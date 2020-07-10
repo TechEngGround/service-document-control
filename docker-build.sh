@@ -1,0 +1,1 @@
+DOCKER_BUILDKIT=1 docker build -f docker/prod.Dockerfile -t local/service-document-control:latest .

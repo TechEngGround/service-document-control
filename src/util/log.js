@@ -6,7 +6,7 @@ const Logger = winston.createLogger({
   format: combine(timestamp(), prettyPrint(), colorize(), printf((info) => `${info.timestamp} [${info.level}]: ${info.message}`)),
   transports: [
     new winston.transports.Console(),
-    // new transports.File({ filename: "app.log" })
+    new winston.transports.File({ filename: 'app.log' }),
   ],
 });
 

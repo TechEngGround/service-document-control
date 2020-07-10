@@ -1,24 +1,15 @@
 const MinioConnector = require('../services/minio')
+const Logger = require('../util/log')
 
 exports.uploadFile = async (req, res) => {
-  console.log(req.file)
-  if (!req.file || Object.keys(req.files).length === 0) {
-    res.status(400).send('No files were uploaded!')
-  } else {
-    const file = req.files.document;
-    const uploadPath = `${__dirname}/uploads/${file.name}`
-    file.mv(uploadPath, async (err) => {
-      if (err) {
-        return res.status(500).send(err)
-      }
+  Logger.info('Upload Request Finished!')
 
-      const minioStatus = await MinioConnector.saveObject(uploadPath, file.name, req.body.userName)
-
-      if (minioStatus.err) {
-        return res.status(500).send(minioStatus.err)
-      }
-
-      res.status(200).send(`File uploaded with ID ${minioStatus.fileID}`)
-    })
+  if (!req.body.userId) {
+    Logger.warn('userId not Provided!')
+    res.status(400).send({ message: 'Provide userId on Body to upload file!' })
+    return
   }
+
+  const minioClient = new MinioConnector()
+  minioClient.saveObject(req.file.path, req.file.filename, req.body.userId, res)
 }

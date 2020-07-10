@@ -1,0 +1,8 @@
+node_modules
+*.log
+*.sh
+*.md
+.env
+.eslintrc.js
+nodemon.json
+uploads

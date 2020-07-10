@@ -4,6 +4,8 @@ const Logger = require('./src/util/log')
 const port = parseInt(process.env.SERVER_PORT) || 3000;
 const app = new App();
 
+require('dotenv').config();
+
 const start = async () => {
   try {
     Logger.info('Starting http server...');
@@ -12,7 +14,7 @@ const start = async () => {
         Logger.error(`Server not initialized, error: ${error}`);
         process.exit(1);
       }
-      Logger.info(`Server started on address: ${address}`);
+      Logger.info(`Server started.`);
     });
   } catch (error) {
     Logger.error(error);

@@ -3,6 +3,6 @@ const fileRouter = require('./file')
 
 const router = express.Router()
 
-router.use('/documents', fileRouter)
+router.use('/files', fileRouter)
 
 module.exports = router

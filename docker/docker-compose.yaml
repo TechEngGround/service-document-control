@@ -1,0 +1,21 @@
+version: '3'
+services:
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: developer
+    command: server /data
+  service-document-control:
+    image: local/service-document-control:latest
+    ports:
+      - "8000:8000"
+    environment:
+      MINIO_IP: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: developer
+      MINIO_BUCKET: documents
+      SERVER_PORT: 8000
