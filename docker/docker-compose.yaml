@@ -8,6 +8,8 @@ services:
       MINIO_ACCESS_KEY: admin
       MINIO_SECRET_KEY: developer
     command: server /data
+    networks:
+      - advocacy-network
   service-document-control:
     image: local/service-document-control:latest
     ports:
@@ -19,3 +21,16 @@ services:
       MINIO_SECRET_KEY: developer
       MINIO_BUCKET: documents
       SERVER_PORT: 8000
+    networks:
+      - advocacy-network
+    depends_on:
+      - minio
+
+networks:
+  advocacy-network:
+    external:
+      name: advocacy-network
+
+volumes:
+  document-data:
+    external: true

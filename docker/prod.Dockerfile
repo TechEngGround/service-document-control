@@ -5,7 +5,7 @@ WORKDIR /app/
 
 RUN yarn && yarn pkg
 
-FROM node:12
+FROM node:12-alpine
 
 USER node
 WORKDIR /app/
