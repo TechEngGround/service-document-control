@@ -1,5 +1,6 @@
 const Minio = require('minio')
 const Logger = require('../util/log')
+const { saveOnDB } = require('../services/gateway')
 
 class MinioConnector {
   constructor() {
@@ -12,7 +13,7 @@ class MinioConnector {
     })
   }
 
-  async saveObject(objectPath, objectName, userId, expressResponse) {
+  async saveObject(objectPath, objectName, userId, documentType, expressResponse) {
     const metadata = {
       'Content-Type': 'application/octet-stream',
       'userId': userId,
@@ -20,12 +21,16 @@ class MinioConnector {
 
     Logger.info(`Uploading File ${objectPath} to Minio Storage`)
 
-    this.minioClient.fPutObject(process.env.MINIO_BUCKET, objectName, objectPath, metadata, (err) => {
+    this.minioClient.fPutObject(process.env.MINIO_BUCKET, objectName, objectPath, metadata, async (err) => {
       if (err) {
         Logger.error(`Error on upload file ${objectName} to Minio storage: ${err}`)
         return expressResponse.status(500).send({ message: err })
       } else {
         Logger.info(`File ${objectName} successfully uploaded!`)
+        const response = await saveOnDB(userId, objectName, documentType)
+        if (response.error) {
+          return expressResponse.status(500).send({ message: response.error })
+        }
         return expressResponse.status(200).send({ fileId: objectName })
       }
     })

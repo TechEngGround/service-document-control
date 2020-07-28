@@ -10,8 +10,14 @@ exports.uploadFile = async (req, res) => {
     return
   }
 
+  if (!req.body.documentType) {
+    Logger.warn('documentType not Provided!')
+    res.status(400).send({ message: 'Provide userId on Body to upload file!' })
+    return
+  }
+
   const minioClient = new MinioConnector()
-  minioClient.saveObject(req.file.path, req.file.filename, req.body.userId, res)
+  minioClient.saveObject(req.file.path, req.file.filename, req.body.userId, req.body.documentType, res)
 }
 
 exports.downloadFile = async (req, res) => {

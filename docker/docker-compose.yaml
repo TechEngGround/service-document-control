@@ -21,6 +21,7 @@ services:
       MINIO_SECRET_KEY: developer
       MINIO_BUCKET: documents
       SERVER_PORT: 8000
+      GATEWAY_URL: http://service-data-manager:5000
     networks:
       - advocacy-network
     depends_on:

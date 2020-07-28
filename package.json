@@ -19,6 +19,7 @@
     "pkg": "^4.4.9"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
