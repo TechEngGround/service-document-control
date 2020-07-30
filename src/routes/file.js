@@ -17,7 +17,7 @@ const upload = multer({ storage })
 
 const fileRouter = express.Router()
 
-fileRouter.post('/upload', upload.single('document'), fileController.uploadFile)
+fileRouter.post('/upload/:userId/:documentType', upload.single('document'), fileController.uploadFile)
 fileRouter.get('/download', fileController.downloadFile)
 
 module.exports = fileRouter

@@ -1,10 +1,10 @@
+require('dotenv').config();
+
 const App = require('./src/app')
 const Logger = require('./src/util/log')
 
 const port = parseInt(process.env.SERVER_PORT) || 3000;
 const app = new App();
-
-require('dotenv').config();
 
 const start = async () => {
   try {

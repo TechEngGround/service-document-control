@@ -4,20 +4,20 @@ const Logger = require('../util/log')
 exports.uploadFile = async (req, res) => {
   Logger.info('Upload Request Finished!')
 
-  if (!req.body.userId) {
+  if (!req.params.userId) {
     Logger.warn('userId not Provided!')
-    res.status(400).send({ message: 'Provide userId on Body to upload file!' })
+    res.status(400).send({ message: 'Provide userId on Params to upload file!' })
     return
   }
 
-  if (!req.body.documentType) {
+  if (!req.params.documentType) {
     Logger.warn('documentType not Provided!')
     res.status(400).send({ message: 'Provide userId on Body to upload file!' })
     return
   }
 
   const minioClient = new MinioConnector()
-  minioClient.saveObject(req.file.path, req.file.filename, req.body.userId, req.body.documentType, res)
+  minioClient.saveObject(req.file.path, req.file.filename, req.params.userId, req.params.documentType, res)
 }
 
 exports.downloadFile = async (req, res) => {
