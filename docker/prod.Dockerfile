@@ -3,14 +3,12 @@ FROM node:12 AS builder
 COPY . /app/
 WORKDIR /app/
 
-RUN yarn && yarn pkg
+RUN cd ../types && yarn install && yarn build && cd ../service-document-control && yarn && yarn pkg 
 
-FROM node:12-alpine
+FROM node:12
 
 USER node
 WORKDIR /app/
-RUN mkdir /app/uploads
-COPY --from=builder /app/documents.app /app/documents.app
-COPY index.html /app/index.html
+COPY --from=builder /app/document.app /app/document.app
 
-CMD ["./documents.app"]
+CMD ["./document.app"]

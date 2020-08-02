@@ -1,4 +1,4 @@
-const winston = require('winston')
+import winston from 'winston'
 
 const { combine, timestamp, prettyPrint, colorize, printf } = winston.format;
 
@@ -10,4 +10,4 @@ const Logger = winston.createLogger({
   ],
 });
 
-module.exports = Logger
+export default Logger

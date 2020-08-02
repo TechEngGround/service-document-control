@@ -2,6 +2,6 @@
   "watch": [
     "src"
   ],
-  "ext": "js",
-  "exec": "node index.js"
+  "ext": "ts",
+  "exec": "ts-node ./src/index.ts"
 }
