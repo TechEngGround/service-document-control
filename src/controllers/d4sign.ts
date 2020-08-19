@@ -39,6 +39,7 @@ export async function uploadDoc(req: Express.Request, res: Express.Response) {
     },
     data: data
   }
+  
 
   const uploadResponse = await axios.post(
     `${endpoint}/documents/${safeUUID}/upload?tokenAPI=${tokenapi}&cryptKey=${cryptKey}`,
