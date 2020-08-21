@@ -50,6 +50,38 @@ export async function saveOnDB(
   }
 }
 
+export async function updateDocDB(
+  mongo_Id: string,
+  d4sign_id: string,
+  filename: string,
+  signers_keys: Array<String>,
+  signers_emails: Array<String>
+) {
+  try {
+    const config = {
+      headers: { 'Authorization': `Bearer ${getJwt()}`,
+                 'Content-Type': 'application/json' },
+      data: {
+        d4sign_id: d4sign_id,
+        signers_keys: signers_keys,
+        signers_emails: signers_emails
+      }
+    };
+
+    Logger.info(`Updating Mongo Document ${filename} on DB.`);
+
+    await axios.put(
+      documentsEndpoint + `updatedoc/${mongo_Id}`,
+      config
+    );
+    Logger.info(`Document ${filename} updated.`);
+
+  } catch (error) {
+    Logger.error(error);
+    return { message: "Error", error };
+  }
+}
+
 export async function login(email: string, password: string) {
   Logger.info("Making request to login...");
   const result = await axios.post(loginEndpoint, { email, password });

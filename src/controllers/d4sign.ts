@@ -1,4 +1,5 @@
 import axios, {AxiosRequestConfig} from 'axios'
+import { updateDocDB } from "../services/gateway"
 import Express from "express";
 import fs from 'fs'
 import request from 'request-promise'
@@ -120,7 +121,7 @@ async function registerSigners(signerdoc: any, file_uuid: string):Promise<any>{
 
  }
 
-export async function getSafes(req: Express.Request, res: Express.Response) {
+async function getSafes(req: Express.Request, res: Express.Response) {
   
   const safeconfig: AxiosRequestConfig = {
     headers: {
@@ -135,11 +136,35 @@ export async function getSafes(req: Express.Request, res: Express.Response) {
     res.status(200).send(safesResponse.data[0]);
     return;
   }
+
+export async function resendSignLink(req: Express.Request, res: Express.Response) {
   
+  const resendconfig: AxiosRequestConfig = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: {
+      "email": req.body.email,
+      "key_signer": req.body.key_signer
+    }
+  }
+  
+  const resendResponse = await axios.post(
+    `${endpoint}/documents/${req.body.doc_uuid}/resend?tokenAPI=${tokenapi}&cryptKey=${cryptKey}`,
+    resendconfig
+    );
+    res.status(200).send(resendResponse.data[0]);
+    return;
+  }
+
 export async function d4signflow(req: Express.Request, res: Express.Response) {
      
   let presencial: string
   let signers_str: string = ''
+  let signers: Array<object> = []
+  let signers_emails_db: Array<string> = []
+  let signers_keys_db: Array<string> = []
+  let signers_confirmation: Array<object> = []
 
   if (!req.body.presencial || req.body.presencial === false) {
     presencial = "0"
@@ -166,8 +191,7 @@ export async function d4signflow(req: Express.Request, res: Express.Response) {
   }
 
   const docuuid = await sendDoc(req.body.file)
-  let signers: Array<object> = []
-
+  
   await req.body.signers.forEach(function (value: string) {
     signers.push({"email": value,
     "act": "1",
@@ -184,21 +208,28 @@ export async function d4signflow(req: Express.Request, res: Express.Response) {
   const signerresponse = await registerSigners(signerdoc, docuuid)
   await sendtoSigner(signers_str, docuuid)
 
-  const finalresponse = {
-    "status":"success",
-    "key_signer": signerresponse.message[0].key_signer,
-    "safe_uuid":safeUUID,
-    "doc_uuid":docuuid
-  }
-  
+  await signerresponse.message.forEach(function (value: any) {
+    signers_confirmation.push({
+      "status":"success",
+      "email": value.email,
+      "key_signer": value.key_signer,
+      "safe_uuid":safeUUID,
+      "doc_uuid":docuuid
+    })
+    signers_emails_db.push(value.email),
+    signers_keys_db.push(value.key_signer)
+  })
+
+  await updateDocDB(req.body.mongo_id, docuuid, req.body.file, signers_keys_db, signers_emails_db)
+
   try {
     Logger.info(`Removing file ${req.body.file} from downloads folder...`)
-    fs.unlinkSync(filespath + req.body.file)
+    //fs.unlinkSync(filespath + req.body.file)
     Logger.info(`File ${req.body.file} successfully removed from downloads folder...`)
   } catch(err) {
     Logger.error(`Error while removing file from downloads folder: ${err.toString()}`);
   }
 
-  return res.status(200).send(finalresponse)
+  return res.status(200).send(signers_confirmation)
 
 }
