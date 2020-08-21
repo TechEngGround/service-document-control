@@ -2,12 +2,14 @@ import axios, {AxiosRequestConfig} from 'axios'
 import Express from "express";
 import fs from 'fs'
 import request from 'request-promise'
-import Logger from "../util/log";
+import Logger from '../util/log';
+import MinioConnector from "../services/minio";
 
 const endpoint = process.env.D4SIGN_URL||'http://demo.d4sign.com.br/api/v1'
 const tokenapi = process.env.D4SIGN_TOKENAPI || 'live_4d21d725a36f9190cf00533deec531d25a182bb4a07c7df19cfc4cb48bb763e1'
 const cryptKey = process.env.D4SIGN_CRYPTKEY||'live_crypt_t9ZpxRzAxOVFQOVaVhz0LDKTEHpUEHTW'
 const safeUUID = process.env.D4SIGN_SAFEUUID||'f55711c5-8bb0-4bb9-b3e4-091e46c4bdc0'
+const minioUserID = process.env.MINIO_USERID || ''
 const filespath = './downloads/'
 
 async function sendDoc(filename: string): Promise<any>{
@@ -81,9 +83,9 @@ async function registerSigners(signerdoc: any, file_uuid: string):Promise<any>{
 
  }
 
- async function sendtoSigner(signermail: string, docuuid: string):Promise<any>{
+ async function sendtoSigner(signers: string, docuuid: string):Promise<any>{
   
-  Logger.info(`Sending document ${docuuid} to user ${signermail}...`);
+  Logger.info(`Sending document ${docuuid} to users ${signers}...`);
   let mailbody = {
     "message": `Assinatura do documento uuid ${docuuid}`,
     "skip_email": "0",
@@ -107,10 +109,10 @@ async function registerSigners(signerdoc: any, file_uuid: string):Promise<any>{
 
   await request(mailoptions, function (error, response){
     if (error){
-      Logger.error(`Error while sending documento to user ${signermail} to sign...`);
+      Logger.error(`Error while sending documento to user(s) ${signers} to sign...`);
       return error
     }
-    Logger.info(`Document ${docuuid} successfully sent to user ${signermail}...`);
+    Logger.info(`Document ${docuuid} successfully sent to user(s) ${signers}...`);
     mailresponse = response.body
   })
   
@@ -136,40 +138,65 @@ export async function getSafes(req: Express.Request, res: Express.Response) {
   
 export async function d4signflow(req: Express.Request, res: Express.Response) {
      
-  let presencial
+  let presencial: string
+  let signers_str: string = ''
 
   if (!req.body.presencial || req.body.presencial === false) {
     presencial = "0"
   }else{
     presencial = "1"
   }
+
+  try{
+    Logger.info(`Downloading file ${req.body.file} to downloads folder...`);
+    const minioClient = new MinioConnector();
+    await minioClient.downloadObject(
+      req.body.file,
+      minioUserID,
+      res
+    );
+    Logger.info(`File ${req.body.file} successfully downloaded to downloads folder...`);
+  }catch{
+    Logger.error("Error when downloading the file to downloads folder!");
+  }
   
-  if (!fs.existsSync(filespath + req.body.filename)) {
+  if (!fs.existsSync(filespath + req.body.file)) {
     Logger.error("File not found on downloads path!");
     return res.status(500).send({"error":"file not found!"});
   }
 
-  const docuuid = await sendDoc(req.body.filename)
+  const docuuid = await sendDoc(req.body.file)
+  let signers: Array<object> = []
 
-  const signerdoc = {"signers" : [
-    {
-      "email": req.body.signermail,
-      "act": "1",
-      "foreign": "0",
-      "certificadoicpbr": "0",
-      "assinatura_presencial": presencial,
-      "embed_methodauth": "email"
-  }]}
+  await req.body.signers.forEach(function (value: string) {
+    signers.push({"email": value,
+    "act": "1",
+    "foreign": "0",
+    "certificadoicpbr": "0",
+    "assinatura_presencial": presencial,
+    "embed_methodauth": "email"
+    })
+    signers_str = signers_str + ' / ' + value
+  })
+
+  const signerdoc = {"signers" : signers}
 
   const signerresponse = await registerSigners(signerdoc, docuuid)
-  await sendtoSigner(req.body.signermail, docuuid)
+  await sendtoSigner(signers_str, docuuid)
 
   const finalresponse = {
     "status":"success",
     "key_signer": signerresponse.message[0].key_signer,
-    "email": signerresponse.message[0].email,
     "safe_uuid":safeUUID,
     "doc_uuid":docuuid
+  }
+  
+  try {
+    Logger.info(`Removing file ${req.body.file} from downloads folder...`)
+    fs.unlinkSync(filespath + req.body.file)
+    Logger.info(`File ${req.body.file} successfully removed from downloads folder...`)
+  } catch(err) {
+    Logger.error(`Error while removing file from downloads folder: ${err.toString()}`);
   }
 
   return res.status(200).send(finalresponse)
