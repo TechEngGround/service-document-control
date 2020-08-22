@@ -3,7 +3,7 @@ require('dotenv').config();
 import App from './app'
 import Logger from './util/log'
 
-const port = process.env.SERVER_PORT && parseInt(process.env.SERVER_PORT) || 3000;
+const port = process.env.SERVER_PORT && parseInt(process.env.SERVER_PORT) || 3002;
 const app = new App();
 
 const start = async () => {

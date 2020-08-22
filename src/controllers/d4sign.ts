@@ -84,7 +84,7 @@ async function registerSigners(signerdoc: any, file_uuid: string):Promise<any>{
 
  }
 
- async function sendtoSigner(signers: string, docuuid: string):Promise<any>{
+async function sendtoSigner(signers: string, docuuid: string):Promise<any>{
   
   Logger.info(`Sending document ${docuuid} to users ${signers}...`);
   let mailbody = {
@@ -138,24 +138,38 @@ async function getSafes(req: Express.Request, res: Express.Response) {
   }
 
 export async function resendSignLink(req: Express.Request, res: Express.Response) {
-  
-  const resendconfig: AxiosRequestConfig = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: {
+    
+  const data = {
       "email": req.body.email,
       "key_signer": req.body.key_signer
-    }
   }
   
-  const resendResponse = await axios.post(
-    `${endpoint}/documents/${req.body.doc_uuid}/resend?tokenAPI=${tokenapi}&cryptKey=${cryptKey}`,
-    resendconfig
-    );
-    res.status(200).send(resendResponse.data[0]);
-    return;
+  let resendlinkoptions = {
+    method: 'POST',
+    url: `${endpoint}/documents/${req.body.doc_uuid}/resend`,
+    qs: {
+      tokenAPI: tokenapi,
+      cryptKey: cryptKey
+    },
+    headers: {'Content-Type': 'application/json',
+              'Accept': 'application/json'},
+    body: data,
+    json: true
   }
+  try{
+  await request(resendlinkoptions, function (error, response){
+    if (error){
+      Logger.error(`Error while sending documento to user(s) ${req.body.email} to sign...`);
+      return res.status(500).send(error)
+    }
+    Logger.info(`Request to re-sent sign link to ${req.body.email} successfully ...`);
+    res.status(response.statusCode).send(response.body);
+    })
+    }catch (err){
+    Logger.error(`Error in request to re-sent sign link to ${req.body.email}: ${err}...`)
+    return;
+  }  
+}
 
 export async function d4signflow(req: Express.Request, res: Express.Response) {
      

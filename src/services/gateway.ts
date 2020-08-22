@@ -2,9 +2,11 @@ import Logger from "../util/log";
 import axios from "axios";
 import { getJwt } from "../util/jwt";
 
-const documentsEndpoint = process.env.GATEWAY_URL + "/docs/";
-const usersEndpoint = process.env.GATEWAY_URL + "/users/";
-const loginEndpoint = process.env.GATEWAY_URL + "/login/adminlogin";
+const gateway_url = process.env.GATEWAY_URL || 'http://localhost:3000'
+
+const documentsEndpoint = gateway_url + "/docs/";
+const usersEndpoint = gateway_url + "/users/";
+const loginEndpoint = gateway_url + "/login/adminlogin";
 
 export async function saveOnDB(
   userId: string,
@@ -58,21 +60,20 @@ export async function updateDocDB(
   signers_emails: Array<String>
 ) {
   try {
-    const config = {
-      headers: { 'Authorization': `Bearer ${getJwt()}`,
-                 'Content-Type': 'application/json' },
-      data: {
+    const data = {
         d4sign_id: d4sign_id,
         signers_keys: signers_keys,
         signers_emails: signers_emails
-      }
     };
 
     Logger.info(`Updating Mongo Document ${filename} on DB.`);
 
     await axios.put(
       documentsEndpoint + `updatedoc/${mongo_Id}`,
-      config
+      data,
+      {headers: { Authorization: `Bearer ${getJwt()}`,
+                 'Content-Type': 'application/json' }
+      },
     );
     Logger.info(`Document ${filename} updated.`);
 
