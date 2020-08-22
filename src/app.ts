@@ -9,7 +9,7 @@ import { login } from './services/gateway'
 import { endpointUser, setJwt } from './util/jwt'
 import Logger from './util/log'
 
-/* const doLogin = () => {
+const doLogin = () => {
   Logger.info('Authenticating to Data Manager...')
   login(endpointUser.email, endpointUser.password)
     .then((token: string) => {
@@ -25,7 +25,7 @@ import Logger from './util/log'
       Logger.error('Error on Login!', err)
       setTimeout(doLogin, 5000)
     })
-} */
+}
 
 class App {
   server: Express.Application
@@ -36,7 +36,7 @@ class App {
     this.server.use(bodyParser.json())
     this.server.use(bodyParser.urlencoded({ extended: true }));
 
-    /*doLogin()*/
+    // doLogin()
   }
 }
 
