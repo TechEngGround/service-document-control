@@ -1,5 +1,5 @@
 import axios, {AxiosRequestConfig} from 'axios'
-import { updateDocDB } from "../services/gateway"
+import { updateDocDB, updateDocSignStatus } from "../services/gateway"
 import Express from "express";
 import fs from 'fs'
 import request from 'request-promise'
@@ -10,6 +10,7 @@ const endpoint = process.env.D4SIGN_URL||'http://demo.d4sign.com.br/api/v1'
 const tokenapi = process.env.D4SIGN_TOKENAPI || 'live_4d21d725a36f9190cf00533deec531d25a182bb4a07c7df19cfc4cb48bb763e1'
 const cryptKey = process.env.D4SIGN_CRYPTKEY||'live_crypt_t9ZpxRzAxOVFQOVaVhz0LDKTEHpUEHTW'
 const safeUUID = process.env.D4SIGN_SAFEUUID||'f55711c5-8bb0-4bb9-b3e4-091e46c4bdc0'
+const callback_url = process.env.CALLBACK_URL || 'https://mytestd4sign.requestcatcher.com/test'
 const minioUserID = process.env.MINIO_USERID || ''
 const filespath = './downloads/'
 
@@ -171,13 +172,61 @@ export async function resendSignLink(req: Express.Request, res: Express.Response
   }  
 }
 
+async function registerCallback(docuuid: string):Promise<void>{
+  
+  let callback_response
+
+  let callbackoptions = {
+    method: 'POST',
+    url: `${endpoint}/documents/${docuuid}/webhooks`,
+    qs: {
+      tokenAPI: tokenapi,
+      cryptKey: cryptKey
+    },
+    headers: {'Content-Type': 'application/json',
+              'Accept': 'application/json'},
+    body: {
+      "url":callback_url
+    },
+    json: true
+  }
+
+  await request(callbackoptions, function (error, response){
+    if (error){
+      Logger.error(`Error while registering callback URL < ${callback_url} > to doc ${docuuid}...`);
+      return error
+    }
+    Logger.info(`Document ${docuuid} callback url < ${callback_url} > successfully created...`);
+    callback_response = response.body
+  })
+
+  return;
+
+}
+
+export async function updateDocStatus(req: Express.Request, res: Express.Response){
+
+  try{
+
+    Logger.info(`Callback received for document ${req.body.uuid}...`)
+    
+    await updateDocSignStatus(req.body)
+    
+    return res.status(200).send({"message":"Ok"})
+  
+  }catch(err){
+    Logger.error(`Error whein receiving callback for document ${req.body.uuid} > ${err.toString()}...`)
+    return res.status(500).send({"error":err})
+  }
+
+}
+
 export async function d4signflow(req: Express.Request, res: Express.Response) {
      
   let presencial: string
   let signers_str: string = ''
   let signers: Array<object> = []
-  let signers_emails_db: Array<string> = []
-  let signers_keys_db: Array<string> = []
+  let signers_info: Array<Object> = []
   let signers_confirmation: Array<object> = []
 
   if (!req.body.presencial || req.body.presencial === false) {
@@ -196,7 +245,7 @@ export async function d4signflow(req: Express.Request, res: Express.Response) {
     );
     Logger.info(`File ${req.body.file} successfully downloaded to downloads folder...`);
   }catch{
-    Logger.error("Error when downloading the file to downloads folder!");
+    Logger.error("Error while downloading the file to downloads folder!");
   }
   
   if (!fs.existsSync(filespath + req.body.file)) {
@@ -221,20 +270,18 @@ export async function d4signflow(req: Express.Request, res: Express.Response) {
 
   const signerresponse = await registerSigners(signerdoc, docuuid)
   await sendtoSigner(signers_str, docuuid)
+  await registerCallback(docuuid)
 
   await signerresponse.message.forEach(function (value: any) {
-    signers_confirmation.push({
-      "status":"success",
+    signers_info.push({
       "email": value.email,
       "key_signer": value.key_signer,
-      "safe_uuid":safeUUID,
+      "signed":false,
       "doc_uuid":docuuid
     })
-    signers_emails_db.push(value.email),
-    signers_keys_db.push(value.key_signer)
   })
 
-  await updateDocDB(req.body.mongo_id, docuuid, req.body.file, signers_keys_db, signers_emails_db)
+  await updateDocDB(req.body.mongo_id, docuuid, req.body.file, signers_info)
 
   try {
     Logger.info(`Removing file ${req.body.file} from downloads folder...`)
