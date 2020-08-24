@@ -15,7 +15,7 @@ const minioUserID = process.env.MINIO_USERID || ''
 const filespath = './downloads/'
 
 async function sendDoc(filename: string): Promise<any>{
-  
+
   Logger.info(`Sending file ${filename} to d4sign API...`);
   const content = fs.createReadStream(filespath + filename)
   let uuid
@@ -52,7 +52,7 @@ async function sendDoc(filename: string): Promise<any>{
 
   return uuid
 
- }
+}
 
 async function registerSigners(signerdoc: any, file_uuid: string):Promise<any>{
   
@@ -83,7 +83,7 @@ async function registerSigners(signerdoc: any, file_uuid: string):Promise<any>{
   
   return signerresponse
 
- }
+}
 
 async function sendtoSigner(signers: string, docuuid: string):Promise<any>{
   
@@ -111,7 +111,7 @@ async function sendtoSigner(signers: string, docuuid: string):Promise<any>{
 
   await request(mailoptions, function (error, response){
     if (error){
-      Logger.error(`Error while sending documento to user(s) ${signers} to sign...`);
+      Logger.error(`Error while sending document to user(s) ${signers} to sign...`);
       return error
     }
     Logger.info(`Document ${docuuid} successfully sent to user(s) ${signers}...`);
@@ -120,7 +120,7 @@ async function sendtoSigner(signers: string, docuuid: string):Promise<any>{
   
   return mailresponse
 
- }
+}
 
 async function getSafes(req: Express.Request, res: Express.Response) {
   
@@ -136,7 +136,39 @@ async function getSafes(req: Express.Request, res: Express.Response) {
     );
     res.status(200).send(safesResponse.data[0]);
     return;
+}
+
+async function registerCallback(docuuid: string):Promise<void>{
+
+  let callback_response
+
+  let callbackoptions = {
+    method: 'POST',
+    url: `${endpoint}/documents/${docuuid}/webhooks`,
+    qs: {
+      tokenAPI: tokenapi,
+      cryptKey: cryptKey
+    },
+    headers: {'Content-Type': 'application/json',
+              'Accept': 'application/json'},
+    body: {
+      "url":callback_url
+    },
+    json: true
   }
+
+  await request(callbackoptions, function (error, response){
+    if (error){
+      Logger.error(`Error while registering callback URL < ${callback_url} > to doc ${docuuid}...`);
+      return error
+    }
+    Logger.info(`Document ${docuuid} callback url < ${callback_url} > successfully created...`);
+    callback_response = response.body
+  })
+
+  return;
+
+}
 
 export async function resendSignLink(req: Express.Request, res: Express.Response) {
     
@@ -172,51 +204,20 @@ export async function resendSignLink(req: Express.Request, res: Express.Response
   }  
 }
 
-async function registerCallback(docuuid: string):Promise<void>{
-  
-  let callback_response
-
-  let callbackoptions = {
-    method: 'POST',
-    url: `${endpoint}/documents/${docuuid}/webhooks`,
-    qs: {
-      tokenAPI: tokenapi,
-      cryptKey: cryptKey
-    },
-    headers: {'Content-Type': 'application/json',
-              'Accept': 'application/json'},
-    body: {
-      "url":callback_url
-    },
-    json: true
-  }
-
-  await request(callbackoptions, function (error, response){
-    if (error){
-      Logger.error(`Error while registering callback URL < ${callback_url} > to doc ${docuuid}...`);
-      return error
-    }
-    Logger.info(`Document ${docuuid} callback url < ${callback_url} > successfully created...`);
-    callback_response = response.body
-  })
-
-  return;
-
-}
-
 export async function updateDocStatus(req: Express.Request, res: Express.Response){
 
   try{
 
-    Logger.info(`Callback received for document ${req.body.uuid}...`)
-    
-    await updateDocSignStatus(req.body)
-    
-    return res.status(200).send({"message":"Ok"})
-  
+      Logger.info(`Callback received for document ${req.body.uuid}...`)
+      
+      await updateDocSignStatus(req.body, parseInt(req.body.type_post))
+      
+      return res.status(200).send({"message":"Ok"})
   }catch(err){
+    
     Logger.error(`Error whein receiving callback for document ${req.body.uuid} > ${err.toString()}...`)
     return res.status(500).send({"error":err})
+  
   }
 
 }

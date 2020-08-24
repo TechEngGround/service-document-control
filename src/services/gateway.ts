@@ -84,6 +84,7 @@ export async function updateDocDB(
 
 export async function updateDocSignStatus(
   update_info: any,
+  operation: number
 ) {
   try {
 
@@ -101,24 +102,45 @@ export async function updateDocSignStatus(
       { filter: docFilter },
       config
       );
-
-    let signers_info = docResponse.data[0].signers_info
-      
-    await signers_info.forEach(function (value: any) {
-      if(value.email == update_info.email){
-        index = signers_info.indexOf(value)
-        signers_info[index] = {
-          email:value.email,
-          key_signer:value.key_signer,
-          signed:true,
-          signed_ts: Date.now(),
-          doc_uuid:value.doc_uuid
+    
+    if (operation == 4){
+      let signers_info = docResponse.data[0].signers_info
+        
+      await signers_info.forEach(function (value: any) {
+        if(value.email == update_info.email){
+          index = signers_info.indexOf(value)
+          signers_info[index] = {
+            email:value.email,
+            key_signer:value.key_signer,
+            signed:true,
+            signed_ts: Date.now()/1000,
+            doc_uuid:value.doc_uuid
+          }
         }
-      }
-    })
+      })
 
-    data = {
-      signers_info: signers_info
+      data = {
+        signers_info: signers_info
+      }
+    } else if (operation == 1){
+      
+      data = {
+        sign_status: "finished",
+        finished_ts: Date.now()/1000
+      }
+    
+    } else if (operation == 3){
+      
+      data = {
+        sign_status: "cancelled"
+      }
+    
+    } else if (operation == 2){
+
+      data = {
+        sign_status: "email-not-sent"
+      }
+      
     }
 
     await axios.put(
