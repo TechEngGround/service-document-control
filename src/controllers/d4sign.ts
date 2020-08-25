@@ -223,8 +223,10 @@ export async function updateDocStatus(req: Express.Request, res: Express.Respons
 }
 
 export async function downloadDoc(req: Express.Request, res: Express.Response) {
-    
-  let resendlinkoptions = {
+  
+  Logger.info(`Request download received for document uuid ${req.body.doc_uuid} ...`);
+
+  let downloadoptions = {
     method: 'POST',
     url: `${endpoint}/documents/${req.body.doc_uuid}/download`,
     qs: {
@@ -237,7 +239,7 @@ export async function downloadDoc(req: Express.Request, res: Express.Response) {
   }
 
   try{
-    await request(resendlinkoptions, function (error, response){
+    await request(downloadoptions, function (error, response){
       if (error){
         Logger.error(`Error while downloading document uuid ${req.body.doc_uuid} ...`);
         return res.status(500).send(error)
