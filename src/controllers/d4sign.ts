@@ -222,6 +222,35 @@ export async function updateDocStatus(req: Express.Request, res: Express.Respons
 
 }
 
+export async function downloadDoc(req: Express.Request, res: Express.Response) {
+    
+  let resendlinkoptions = {
+    method: 'POST',
+    url: `${endpoint}/documents/${req.body.doc_uuid}/download`,
+    qs: {
+      tokenAPI: tokenapi,
+      cryptKey: cryptKey
+    },
+    headers: {'Content-Type': 'application/json',
+              'Accept': 'application/json'},
+    json: true
+  }
+
+  try{
+    await request(resendlinkoptions, function (error, response){
+      if (error){
+        Logger.error(`Error while downloading document uuid ${req.body.doc_uuid} ...`);
+        return res.status(500).send(error)
+      }
+      Logger.info(`Document uuid ${req.body.doc_uuid} successfully downloaded ...`);
+      res.status(response.statusCode).send(response.body);
+      })
+  }catch (err){
+    Logger.error(`Error in download request to doc ${req.body.uuid}: ${err}...`)
+    return;
+  }  
+}
+
 export async function d4signflow(req: Express.Request, res: Express.Response) {
      
   let presencial: string
