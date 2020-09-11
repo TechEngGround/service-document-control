@@ -36,7 +36,7 @@ class App {
     this.server.use(bodyParser.json())
     this.server.use(bodyParser.urlencoded({ extended: true }));
 
-    doLogin()
+    // doLogin()
   }
 }
 
