@@ -18,12 +18,12 @@ const doLogin = () => {
         setJwt(token)
       } else {
         Logger.info('Not Authenticated or env var SECRET_TOKEN not exists!!')
-        setTimeout(doLogin, 5000)
+        setTimeout(doLogin, 20000)
       }
     })
     .catch((err: any) => {
       Logger.error('Error on Login!', err)
-      setTimeout(doLogin, 5000)
+      setTimeout(doLogin, 20000)
     })
 }
 
@@ -36,7 +36,7 @@ class App {
     this.server.use(bodyParser.json())
     this.server.use(bodyParser.urlencoded({ extended: true }));
 
-    // doLogin()
+    doLogin()
   }
 }
 

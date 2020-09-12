@@ -9,11 +9,7 @@ const app = new App();
 const start = async () => {
   try {
     Logger.info('Starting http server...');
-    app.server.listen(port, '0.0.0.0', (error: any, address: string) => {
-      if (error) {
-        Logger.error(`Server not initialized, error: ${error}`);
-        process.exit(1);
-      }
+    app.server.listen(port, '0.0.0.0', () => {
       Logger.info(`Server started.`);
     });
   } catch (error) {
