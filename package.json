@@ -10,6 +10,7 @@
   "scripts": {
     "lint": "eslint",
     "dev": "nodemon",
+    "build": "tsc",
     "pkg": "tsc && pkg dist/index.js --target node12-linux-x64 --output document.app"
   },
   "devDependencies": {
