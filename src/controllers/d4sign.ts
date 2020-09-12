@@ -313,7 +313,7 @@ export async function d4signflow(req: Express.Request, res: Express.Response) {
     })
   })
 
-  await updateDocDB(req.body.mongo_id, docuuid, req.body.file, signers_info)
+  await updateDocDB(docuuid, req.body.file, signers_info)
 
   try {
     Logger.info(`Removing file ${req.body.file} from downloads folder...`)
