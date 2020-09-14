@@ -22,6 +22,12 @@ services:
       MINIO_BUCKET: documents
       SERVER_PORT: 8000
       GATEWAY_URL: http://service-data-manager:5000
+      D4SIGN_URL: http://demo.d4sign.com.br/api/v1
+      D4SIGN_TOKENAPI: live_4d21d725a36f9190cf00533deec531d25a182bb4a07c7df19cfc4cb48bb763e1
+      D4SIGN_CRYPTKEY: live_crypt_t9ZpxRzAxOVFQOVaVhz0LDKTEHpUEHTW
+      D4SIGN_SAFEUUID: f55711c5-8bb0-4bb9-b3e4-091e46c4bdc0
+      CALLBACK_URL: https://mytestd4sign.requestcatcher.com/test
+      MINIO_USERID: TEST
     networks:
       - advocacy-network
     depends_on:
