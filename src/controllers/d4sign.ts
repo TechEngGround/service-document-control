@@ -6,11 +6,11 @@ import request from 'request-promise'
 import Logger from '../util/log';
 import MinioConnector from "../services/minio";
 
-const endpoint = process.env.D4SIGN_URL||'http://demo.d4sign.com.br/api/v1'
-const tokenapi = process.env.D4SIGN_TOKENAPI || 'live_4d21d725a36f9190cf00533deec531d25a182bb4a07c7df19cfc4cb48bb763e1'
-const cryptKey = process.env.D4SIGN_CRYPTKEY||'live_crypt_t9ZpxRzAxOVFQOVaVhz0LDKTEHpUEHTW'
-const safeUUID = process.env.D4SIGN_SAFEUUID||'f55711c5-8bb0-4bb9-b3e4-091e46c4bdc0'
-const callback_url = process.env.CALLBACK_URL || 'https://mytestd4sign.requestcatcher.com/test'
+const endpoint = process.env.D4SIGN_URL
+const tokenapi = process.env.D4SIGN_TOKENAPI
+const cryptKey = process.env.D4SIGN_CRYPTKEY
+const safeUUID = process.env.D4SIGN_SAFEUUID
+const callback_url = process.env.CALLBACK_URL
 const minioUserID = process.env.MINIO_USERID || ''
 const filespath = './downloads/'
 
