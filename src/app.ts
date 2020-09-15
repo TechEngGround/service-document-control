@@ -32,9 +32,9 @@ class App {
 
   constructor() {
     this.server = Express()
-    this.server.use(router)
-    this.server.use(bodyParser.json())
+    this.server.use(bodyParser.json());
     this.server.use(bodyParser.urlencoded({ extended: true }));
+    this.server.use(router);  
 
     doLogin()
   }
