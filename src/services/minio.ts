@@ -1,4 +1,4 @@
-import Minio from "minio";
+import * as Minio from "minio";
 import Express from "express";
 
 import Logger from "../util/log";

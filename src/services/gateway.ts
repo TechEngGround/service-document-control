@@ -7,7 +7,6 @@ const gateway_url = process.env.GATEWAY_URL || 'http://localhost:3000'
 const documentsEndpoint = gateway_url + "/docs/";
 const usersEndpoint = gateway_url + "/users/";
 const loginEndpoint = gateway_url + "/login/adminlogin";
-const jwt = getJwt() || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRvY2FkbWluQGFkbWluIiwiaWF0IjoxNTk4MjM3ODk3fQ.lZ1ivxrBhCBIg0ny5ExdafgpcxOqNNfwtvzTW9nSVeA"
 
 export async function saveOnDB(
   userId: string,
@@ -16,7 +15,7 @@ export async function saveOnDB(
 ) {
   try {
     const config = {
-      headers: { Authorization: `Bearer ${jwt}` },
+      headers: { Authorization: `Bearer ${getJwt()}` },
     };
 
     Logger.info(`Save Document ${filename} on DB for user ${userId}.`);
@@ -70,7 +69,7 @@ export async function updateDocDB(
     await axios.put(
       documentsEndpoint + `updatedoc/${mongo_Id}`,
       data,
-      {headers: { Authorization: `Bearer ${jwt}`,
+      {headers: { Authorization: `Bearer ${getJwt()}`,
                  'Content-Type': 'application/json' }
       },
     );
@@ -91,7 +90,7 @@ export async function updateDocSignStatus(
     let data, index
     
     const config = {
-      headers: { Authorization: `Bearer ${jwt}` },
+      headers: { Authorization: `Bearer ${getJwt()}` },
     };
     
     Logger.info(`Updating Mongo Document d4sign id > ${update_info.uuid} sign status on DB.`);
@@ -146,7 +145,7 @@ export async function updateDocSignStatus(
     await axios.put(
       documentsEndpoint + `updatedoc/${docResponse.data[0]._id}`,
       data,
-      {headers: { Authorization: `Bearer ${jwt}`,
+      {headers: { Authorization: `Bearer ${getJwt()}`,
                  'Content-Type': 'application/json' }
       },
     );
