@@ -42,9 +42,9 @@ async function sendDoc(filename: string): Promise<any>{
   }
 
   await request(uploadoptions, function (error, response){
-    if (error){
-      Logger.error(`Error during file upload to d4sign...`);
-      return error
+    if (response.statusCode != 200){
+      Logger.error(`Error during file upload to d4sign...>> ${response.body.message}`);
+      return '-1'
     }
     uuid = response.body.uuid
     Logger.info(`File ${filename} successfully uploaded to d4sign API with uuid ${uuid} ...`);
@@ -260,6 +260,7 @@ export async function d4signflow(req: Express.Request, res: Express.Response) {
   let signers: Array<object> = []
   let signers_info: Array<Object> = []
   let signers_confirmation: Array<object> = []
+  let docuuid: string
 
   if (!req.body.presencial || req.body.presencial === false) {
     presencial = "0"
@@ -281,7 +282,12 @@ export async function d4signflow(req: Express.Request, res: Express.Response) {
     return res.status(500).send({"error":"file not found!"});
   }
 
-  const docuuid = await sendDoc(req.body.file)
+  try{
+    docuuid = await sendDoc(req.body.file)
+  } catch (error) {
+    res.status(500).send({error: 'Error on file upload to d4sign... cancelling '})
+    return error
+  }
   
   await req.body.signers.forEach(function (value: string) {
     signers.push({"email": value,
