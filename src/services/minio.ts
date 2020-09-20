@@ -23,6 +23,7 @@ class MinioConnector {
     objectName: string,
     userId: string,
     documentType: string,
+    needSign: boolean,
     expressResponse: Express.Response
   ) {
     const metadata = {
@@ -45,7 +46,7 @@ class MinioConnector {
           return expressResponse.status(500).send({ message: err });
         } else {
           Logger.info(`File ${objectName} successfully uploaded!`);
-          const response = await saveOnDB(userId, objectName, documentType);
+          const response = await saveOnDB(userId, objectName, documentType, needSign);
           if (response.error) {
             return expressResponse
               .status(500)

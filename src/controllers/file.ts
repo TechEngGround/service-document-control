@@ -20,12 +20,19 @@ export async function uploadFile(req: Express.Request, res: Express.Response) {
     return;
   }
 
+  if(!req.query.needSign) {
+    Logger.warn("needSign not Provided!");
+    res.status(400).send({ message: "Provide needSign on Query to upload file!" });
+    return;
+  }
+
   const minioClient = new MinioConnector();
   minioClient.saveObject(
     req.file.path,
     req.file.filename,
     req.params.userId,
     req.params.documentType,
+    req.query.needSign === "true",
     res
   );
 }

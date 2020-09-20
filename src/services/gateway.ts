@@ -11,7 +11,8 @@ const loginEndpoint = gateway_url + "/login/adminlogin";
 export async function saveOnDB(
   userId: string,
   filename: string,
-  documentType: string
+  documentType: string,
+  needSign: boolean
 ) {
   try {
     const config = {
@@ -22,6 +23,7 @@ export async function saveOnDB(
     const document = {
       type: documentType,
       path: filename,
+      need_sign: needSign
     };
     const documentsResponse = await axios.post(
       documentsEndpoint + "createdoc",
