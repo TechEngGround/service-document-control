@@ -270,11 +270,7 @@ export async function d4signflow(req: Express.Request, res: Express.Response) {
   try{
     Logger.info(`Downloading file ${req.body.file} to downloads folder...`);
     const minioClient = new MinioConnector();
-    await minioClient.downloadObject(
-      req.body.file,
-      minioUserID,
-      res
-    );
+    await minioClient.downloadObjectSync(req.body.file);
     Logger.info(`File ${req.body.file} successfully downloaded to downloads folder...`);
   }catch{
     Logger.error("Error while downloading the file to downloads folder!");

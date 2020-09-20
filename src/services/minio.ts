@@ -103,6 +103,30 @@ class MinioConnector {
       }
     );
   }
+
+  downloadObjectSync(
+    objectName: string,
+  ): Promise<string> {
+    Logger.info(`Downloading Object ${objectName}`);
+
+    return new Promise(resolve => {
+        this.minioClient.fGetObject(
+        process.env.MINIO_BUCKET || "documents",
+        objectName,
+        `downloads/${objectName}`,
+        (err) => {
+          if (err) {
+            Logger.error(`Error: ${err}`);
+            resolve(objectName)
+            return;
+          }
+          Logger.info(`Object ${objectName} Downloaded!`);
+          resolve(objectName)
+          return;
+        }
+      );
+    })
+  }
 }
 
 export default MinioConnector;
