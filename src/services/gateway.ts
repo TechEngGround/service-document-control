@@ -6,7 +6,7 @@ const gateway_url = process.env.GATEWAY_URL || 'http://localhost:3000'
 
 const documentsEndpoint = gateway_url + "/docs/";
 const usersEndpoint = gateway_url + "/users/";
-const loginEndpoint = gateway_url + "/login/adminlogin";
+const loginEndpoint = gateway_url + "/login";
 
 export async function saveOnDB(
   userId: string,
@@ -164,5 +164,5 @@ export async function login(email: string, password: string) {
   const result = await axios.post(loginEndpoint, { email, password });
 
   Logger.info("Request done!");
-  return result.data.token;
+  return result.data.last_token;
 }

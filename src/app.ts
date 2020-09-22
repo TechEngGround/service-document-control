@@ -22,6 +22,7 @@ const doLogin = () => {
       }
     })
     .catch((err: any) => {
+      console.log(err)
       Logger.error('Error on Login!', err)
       setTimeout(doLogin, 20000)
     })
