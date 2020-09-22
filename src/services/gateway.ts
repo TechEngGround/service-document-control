@@ -55,27 +55,27 @@ export async function saveOnDB(
 }
 
 export async function updateDocDB(
-  mongo_Id: string,
   d4sign_id: string,
-  filename: string,
+  file: string,
   signers_info: Array<Object>,
 ) {
   try {
     const data = {
+        file: file,
         d4sign_id: d4sign_id,
         signers_info: signers_info
     };
 
-    Logger.info(`Updating Mongo Document ${filename} on DB.`);
+    Logger.info(`Updating Mongo Document ${file} on DB.`);
 
-    await axios.put(
-      documentsEndpoint + `updatedoc/${mongo_Id}`,
+    await axios.post(
+      documentsEndpoint + `findByNameAndUpdate`,
       data,
       {headers: { Authorization: `Bearer ${getJwt()}`,
                  'Content-Type': 'application/json' }
       },
     );
-    Logger.info(`Document ${filename} updated.`);
+    Logger.info(`Document ${file} updated.`);
 
   } catch (error) {
     Logger.error(error);

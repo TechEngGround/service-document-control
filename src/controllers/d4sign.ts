@@ -89,7 +89,6 @@ async function sendtoSigner(signers: string, docuuid: string):Promise<any>{
   
   Logger.info(`Sending document ${docuuid} to users ${signers}...`);
   let mailbody = {
-    "message": `Assinatura do documento uuid ${docuuid}`,
     "skip_email": "0",
     "workflow": "0",
     "tokenAPI": tokenapi
@@ -295,7 +294,8 @@ export async function d4signflow(req: Express.Request, res: Express.Response) {
     "foreign": "0",
     "certificadoicpbr": "0",
     "assinatura_presencial": presencial,
-    "embed_methodauth": "email"
+    "embed_methodauth": "password",
+    "skip_email":"1"
     })
     signers_str = signers_str + ' / ' + value
   })
@@ -315,7 +315,7 @@ export async function d4signflow(req: Express.Request, res: Express.Response) {
     })
   })
 
-  await updateDocDB(req.body.mongo_id, docuuid, req.body.file, signers_info)
+  await updateDocDB(docuuid, req.body.file, signers_info)
 
   try {
     Logger.info(`Removing file ${req.body.file} from downloads folder...`)
