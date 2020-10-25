@@ -60,46 +60,21 @@ class MinioConnector {
 
   async downloadObject(
     objectName: string,
-    userId: string,
     expressResponse: Express.Response
   ) {
-    Logger.info(`Verifying userId ${userId} on Object Metadata ${objectName}`);
-
-    this.minioClient.statObject(
+    this.minioClient.fGetObject(
       process.env.MINIO_BUCKET || "documents",
       objectName,
-      (err, stat) => {
+      `downloads/${objectName}`,
+      (err) => {
         if (err) {
-          Logger.error(`Object ${objectName} not found! ${err}`);
-          expressResponse.status(400).send({ message: "Object not found!" });
+          Logger.error(`Error: ${err}`);
+          expressResponse.status(500).send({ message: err });
           return;
         }
-        if (stat.metaData.userid !== userId) {
-          console.log(stat);
-          Logger.error(`User ${userId} not authorized to view this object!`);
-          expressResponse
-            .status(401)
-            .send({ message: "Not authorized to view this object!" });
-          return;
-        }
-        Logger.info(
-          `Authorization Successfully, Getting Object ${objectName} from storage.`
-        );
-        this.minioClient.fGetObject(
-          process.env.MINIO_BUCKET || "documents",
-          objectName,
-          `downloads/${objectName}`,
-          (err) => {
-            if (err) {
-              Logger.error(`Error: ${err}`);
-              expressResponse.status(500).send({ message: err });
-              return;
-            }
-            Logger.info(`Sending Object ${objectName} to user`);
-            expressResponse.download(`downloads/${objectName}`);
-            return;
-          }
-        );
+        Logger.info(`Sending Object ${objectName} to user`);
+        expressResponse.download(`downloads/${objectName}`);
+        return;
       }
     );
   }

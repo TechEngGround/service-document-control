@@ -43,14 +43,6 @@ export async function downloadFile(
 ) {
   Logger.info("Download Request.");
 
-  if (!req.query.userId) {
-    Logger.warn("userId not Provided!");
-    res
-      .status(400)
-      .send({ message: "Provide userId on Query to download file!" });
-    return;
-  }
-
   if (!req.query.filename) {
     Logger.warn("filename not Provided!");
     res
@@ -70,7 +62,6 @@ export async function downloadFile(
   const minioClient = new MinioConnector();
   minioClient.downloadObject(
     `${req.query.filename}.${req.query.filetype}`,
-    req.query.userId.toString(),
     res
   );
 }
