@@ -4,6 +4,8 @@ import Express from "express";
 import Logger from "../util/log";
 import { saveOnDB } from "../services/gateway";
 
+import fs from 'fs'
+
 class MinioConnector {
   minioClient: Minio.Client;
 
@@ -60,22 +62,30 @@ class MinioConnector {
 
   async downloadObject(
     objectName: string,
-    expressResponse: Express.Response
+    expressResponse: Express.Response,
+    originalName?: string
   ) {
+    let fileName = ''
+    if (originalName){
+      fileName = originalName
+    } else {
+      fileName = objectName
+    }
     this.minioClient.fGetObject(
       process.env.MINIO_BUCKET || "documents",
       objectName,
-      `downloads/${objectName}`,
+      `downloads/${fileName}`,
       (err) => {
         if (err) {
           Logger.error(`Error: ${err}`);
           expressResponse.status(500).send({ message: err });
           return;
         }
-        Logger.info(`Sending Object ${objectName} to user`);
-        expressResponse.download(`downloads/${objectName}`);
-        return;
-      }
+        Logger.info(`Sending Object ${fileName} to user`);
+        
+        expressResponse.download(`downloads/${fileName}`);
+        return
+        }
     );
   }
 
