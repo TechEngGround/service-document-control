@@ -59,20 +59,10 @@ export async function downloadFile(
     return;
   }
 
-
   const minioClient = new MinioConnector();
   
-  if(req.query.originalName){
-    console.log(req.query.originalName)
-    minioClient.downloadObject(
-      `${req.query.filename}.${req.query.filetype}`,
-      res,
-      req.query.originalName.toString(),
-    );
-  } else {
-    minioClient.downloadObject(
-      `${req.query.filename}.${req.query.filetype}`,
-      res
-    );
-  }
+  minioClient.downloadObject(
+    `${req.query.filename}.${req.query.filetype}`,
+    res
+  );
 }
