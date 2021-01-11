@@ -1,4 +1,5 @@
 import { generatePDF } from "./pdfgen"
+import MinioConnector from "../services/minio";
 import moment from "moment"
 import {
     contractText,
@@ -25,7 +26,16 @@ export async function generateAceitePDF(req: Express.Request, res: Express.Respo
           .replace(/{{currentDate}}/g, moment().format("LL")),
         `Aceite-${req.params.clientId}`,
       )
-      return res.status(200).json({ status: "ok" })
+
+      const minioClient = new MinioConnector();
+      const response = await minioClient.saveObjectforSign(
+          `pdfgen/Aceite-${req.params.clientId}.pdf`,
+          `Aceite-${req.params.clientId}.pdf`,
+          req.params.clientId,
+          'ASSINATURA - ACEITE',
+        );
+            
+      return res.status(200).json(response)
     } catch (err) {
       return res.status(500).json({ status: err })
     }
@@ -46,7 +56,14 @@ export async function generateAceitePDF(req: Express.Request, res: Express.Respo
           .replace(/{{currentDate}}/g, moment().format("LL")),
         `Contrato-${req.params.clientId}`,
       )
-      return res.status(200).json({ status: "ok" })
+      const minioClient = new MinioConnector();
+      const response = await minioClient.saveObjectforSign(
+          `pdfgen/Contrato-${req.params.clientId}.pdf`,
+          `Contrato-${req.params.clientId}.pdf`,
+          req.params.clientId,
+          'ASSINATURA - CONTRATO DE PRESTAÇÃO',
+        );
+      return res.status(200).json(response)
     } catch (err) {
       return res.status(500).json(err)
     }
@@ -67,7 +84,17 @@ export async function generateAceitePDF(req: Express.Request, res: Express.Respo
           .replace(/{{currentDate}}/g, moment().format("LL")),
         `Procuracao-${req.params.clientId}`,
       )
-      return res.status(200).json({ status: "ok" })
+      
+      const minioClient = new MinioConnector();
+      
+      const response = await minioClient.saveObjectforSign(
+          `pdfgen/Procuracao-${req.params.clientId}.pdf`,
+          `Procuracao-${req.params.clientId}.pdf`,
+          req.params.clientId,
+          'ASSINATURA - PROCURAÇÃO',
+        );
+
+      return res.status(200).json(response)
     } catch (err) {
       return res.status(500).json(err)
     }

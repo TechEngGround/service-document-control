@@ -38,13 +38,25 @@ export async function saveOnDB(
       { filter: userFilter },
       config
     );
+    
+    console.log(userResponse.data[0])
+    console.log("----------------------------------")
+    console.log(userResponse.data[0].documents)
+    console.log("----------------------------------")
 
     userResponse.data[0].documents.push(documentsResponse.data);
-    await axios.put(
+    
+    console.log(userResponse.data[0].documents)
+    console.log("----------------------------------")
+    const updateduser = await axios.put(
       usersEndpoint + "updateuser/" + userId,
       { documents: userResponse.data[0].documents },
       config
     );
+
+    console.log(updateduser.data)
+    console.log("----------------------------------")
+
     Logger.info(`User Updated!`);
 
     return { message: "Document Saved and User Updated!", error: undefined };

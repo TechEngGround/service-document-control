@@ -60,6 +60,42 @@ class MinioConnector {
     );
   }
 
+  async saveObjectforSign(
+    objectPath: string,
+    objectName: string,
+    userId: string,
+    documentType: string,
+  ) {
+    const metadata = {
+      "Content-Type": "application/octet-stream",
+      userId: userId,
+    };
+
+    Logger.info(`Uploading File ${objectPath} to Minio Storage`);
+
+    this.minioClient.fPutObject(
+      process.env.MINIO_BUCKET || "documents",
+      objectName,
+      objectPath,
+      metadata,
+      async (err) => {
+        if (err) {
+          Logger.error(
+            `Error on upload file ${objectName} to Minio storage: ${err}`
+          );
+          return { message: err };
+        } else {
+          Logger.info(`File ${objectName} successfully uploaded!`);
+          const response = await saveOnDB(userId, objectName, documentType, true);
+          if (response.error) {
+            return { message: response.error };
+          }
+          return { fileId: objectName };
+        }
+      }
+    );
+  }
+
   async downloadObject(
     objectName: string,
     expressResponse: Express.Response,

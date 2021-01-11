@@ -1253,7 +1253,7 @@ export const contractText =
   "    <style>" +
   "        body {" +
   "            font-family: 'Roboto';font-size: 15px;" +
-  "            background-image: url('{{siteUrl}}/api/img/BackgroundBody.jpg');" +
+  "            background-image: url('https://i.ibb.co/3Rsn9f0/Background-Body.jpg');" +
   "        }" +
   "        div {" +
   "            text-align: justify;" +
@@ -1278,7 +1278,7 @@ export const contractText =
   '    <meta charset="utf-8">' +
   "</head>" +
   "<body>" +
-  '    <div style="text-align: right; padding-right: 10%; padding-top: 5%;" ><img src="{{siteUrl}}/api/img/Logo.png" alt="BCA" width=20% height=20%></div>' +
+  '    <div style="text-align: right; padding-right: 10%; padding-top: 5%;" ><img src="https://i.ibb.co/dbhPfX8/Logo.png" alt="BCA" width=20% height=20%></div>' +
   '    <div style="padding-right: 10%; padding-left: 10%; padding-top: 3%;">' +
   "        <h3><center>CONTRATO DE PRESTAÇÃO DE SERVIÇOS ADVOCATÍCIOS</center></h3>" +
   '        <p><span style="font-weight: 400;"><b>{{name}}</b>, <b>{{nacionalidade}}</b>, <b>{{estadocivil}}</b>, inscrito no CPF: <b>{{cpf}}</b>, RG: <b>{{rg}}</b>, residente e domiciliado no endereço: <b>{{endereco}}</b>, CEP: <b>{{cep}}</b> e de outro lado, como prestador de serviço/contratado/escritório, assim doravante indicado, o escritório de Advocacia <b>BOCAYUVA & ADVOGADOS ASSOCIADOS</b>  S/S, Pessoa Jurídica registrada no CNPJ nº 22.588.047/0001-50, inscrita na OAB/DF nº 2493/2015, neste ato representado por sua sócia <b>MARCELA CARVALHO BOCAYUVA</b>, brasileira, solteira, advogada, inscrita na OAB/DF 41.954, CPF: 021.164.381-52, e <b>LUIS FELIPE CARVALHO BOCAYUVA</b>, brasileiro, solteiro, advogado, inscrito na OAB/DF sob o nº 50829, CPF 021.164.431-56, com endereço profissional no SRTVS Quadra 701, BLOCO O, SALAS 430-433, Edifício Multiempresarial, Asa Sul, Brasília – DF, CEP 70340-000, Telefones:  (61)3032-8936, (61)99192-9999, (61)98383-1993, e-mail contato@bocayuvaadvogados.com.br ajustam entre si, com fulcro no artigo 22 da Lei nº 8.906/94, mediante as seguintes cláusulas e condições:</span></p>' +
@@ -1330,7 +1330,7 @@ export const aceiteContract =
   "<style>" +
   "        body {" +
   "            font-family: 'Roboto';font-size: 15px;" +
-  "            background-image: url('{{siteUrl}}/api/img/BackgroundBody.jpg');" +
+  "            background-image: url('https://i.ibb.co/3Rsn9f0/Background-Body.jpg');" +
   "        }" +
   "        div {" +
   "            text-align: justify;" +
@@ -1355,7 +1355,7 @@ export const aceiteContract =
   '    <meta charset="utf-8">' +
   "</head>" +
   '<body background="BackgroundBody.jpg">' +
-  '    <div style="text-align: right; padding-right: 10%; padding-top: 5%;" ><img src="{{siteUrl}}/api/img/Logo.png" alt="BCA" width=20% height=20%></div>' +
+  '    <div style="text-align: right; padding-right: 10%; padding-top: 5%;" ><img src="https://i.ibb.co/dbhPfX8/Logo.png" alt="BCA" width=20% height=20%></div>' +
   '    <div style="padding-right: 10%; padding-left: 10%; padding-top: 3%;">' +
   "        <h3><center>CONTRATO DE PRESTAÇÃO DE SERVIÇOS ADVOCATÍCIOS</center></h3>" +
   '        <p><span style="font-weight: 400;">Pelo presente instrumento particular, que entre si fazem, de um lado como <b>CLIENTE</b> e assim doravante indicado, <b>{{name}}</b>, <b>{{nacionalidade}}</b>, <b>{{estadocivil}}</b>, portador do RG nº <b>{{rg}}</b>, CPF nº <b>{{cpf}}</b>, residente e domiciliado no endereço <b>{{endereco}}</b>, CEP <b>{{cep}}</b>, e de outro lado, como <b>ESCRITÓRIO</b>, assim doravante indicado, o escritório de Advocacia <b>BOCAYUVA & ADVOGADOS ASSOCIADOS S/S</b>, Pessoa Jurídica registrada no CNPJ nº 22.588.047/0001-50, inscrita na OAB/DF nº 2493/2015, neste ato representado por sua sócia <b>MARCELA CARVALHO BOCAYUVA</b>, brasileira, solteira, advogada, inscrita na OAB/DF 41.954, CPF: 021.164.381-52, e <b>LUIS FELIPE CARVALHO BOCAYUVA</b>, brasileiro, solteiro, advogado, inscrito na OAB/DF sob o nº 50829, CPF 021.164.431-56, com endereço profissional no SRTVS Quadra 701, Edifício Multiempresarial, Salas 430-433, CEP 70340-000, Telefones: (61)3032-8936, (61)9192-9999, (61)8383-1993, e-mail contato@bocayuvaadvogados.com.br, ajustam entre si, com fulcro no artigo 22 da Lei nº 8.906/94, mediante as seguintes cláusulas e condições:</span></p>' +
@@ -1404,7 +1404,7 @@ export const contractTextMaternidade =
   "    <style>" +
   "        body {" +
   "            font-family: 'Roboto';font-size: 15px;" +
-  "            background-image: url('{{siteUrl}}/api/img/BackgroundBody.jpg');" +
+  "            background-image: url('https://i.ibb.co/3Rsn9f0/Background-Body.jpg;" +
   "        }" +
   "        div {" +
   "            text-align: justify;" +
@@ -1429,7 +1429,7 @@ export const contractTextMaternidade =
   '    <meta charset="utf-8">' +
   "</head>" +
   "<body>" +
-  '    <div style="text-align: right; padding-right: 10%; padding-top: 5%;" ><img src="{{siteUrl}}/api/img/Logo.png" alt="BCA" width=20% height=20%></div>' +
+  '    <div style="text-align: right; padding-right: 10%; padding-top: 5%;" ><img src="https://i.ibb.co/dbhPfX8/Logo.png" alt="BCA" width=20% height=20%></div>' +
   '<div style="padding-right: 10%; padding-left: 10%; padding-top: 3%;">' +
   "        <h3>" +
   "            <center>CONTRATO DE PRESTAÇÃO DE SERVIÇOS ADVOCATÍCIOS</center>" +
@@ -1537,7 +1537,7 @@ export const contractTextRevisao =
   "    <style>" +
   "        body {" +
   "            font-family: 'Roboto';font-size: 15px;" +
-  "            background-image: url('{{siteUrl}}/api/img/BackgroundBody.jpg');" +
+  "            background-image: url('https://i.ibb.co/3Rsn9f0/Background-Body.jpg');" +
   "        }" +
   "        div {" +
   "            text-align: justify;" +
@@ -1562,7 +1562,7 @@ export const contractTextRevisao =
   '    <meta charset="utf-8">' +
   "</head>" +
   "<body>" +
-  '    <div style="text-align: right; padding-right: 10%; padding-top: 5%;" ><img src="{{siteUrl}}/api/img/Logo.png" alt="BCA" width=20% height=20%></div>' +
+  '    <div style="text-align: right; padding-right: 10%; padding-top: 5%;" ><img src="https://i.ibb.co/dbhPfX8/Logo.png" alt="BCA" width=20% height=20%></div>' +
   '<div style="padding-right: 10%; padding-left: 10%; padding-top: 3%;">' +
   "        <h3>" +
   "            <center>CONTRATO DE PRESTAÇÃO DE SERVIÇOS ADVOCATÍCIOS</center>" +
@@ -1667,7 +1667,7 @@ export const procuracao =
   "    <style>" +
   "        body {" +
   "            font-family: 'Roboto';font-size: 15px;" +
-  "            background-image: url('{{siteUrl}}/api/img/BackgroundBody.jpg');" +
+  "            background-image: url('https://i.ibb.co/3Rsn9f0/Background-Body.jpg');" +
   "        }" +
   "        div {" +
   "            text-align: justify;" +
@@ -1695,9 +1695,9 @@ export const procuracao =
   '    <meta charset="utf-8">' +
   "</head>" +
   "" +
-  "<body background-image: url('{{siteUrl}}/api/img/BackgroundBody.jpg');>" +
+  "<body background-image: url('https://i.ibb.co/3Rsn9f0/Background-Body.jpg');>" +
   "    <div>" +
-  '    <div style="text-align: right; padding-right: 10%; padding-top: 5%;"><img src="{{siteUrl}}/api/img/Logo.png" alt="BCA" width=20%' +
+  '    <div style="text-align: right; padding-right: 10%; padding-top: 5%;"><img src="https://i.ibb.co/dbhPfX8/Logo.png" alt="BCA" width=20%' +
   "            height=15%></div>" +
   '    <div style="padding-right: 10%; padding-left: 10%; padding-top: 3%;">' +
   "        <h3>" +
