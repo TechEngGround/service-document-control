@@ -32,30 +32,13 @@ export async function saveOnDB(
     );
     Logger.info(`Document ${filename} saved! Updating user.`);
 
-    const userFilter = { _id: userId };
     const userResponse = await axios.post(
-      usersEndpoint + "getuserbyfilter",
-      { filter: userFilter },
-      config
-    );
-    
-    console.log(userResponse.data[0])
-    console.log("----------------------------------")
-    console.log(userResponse.data[0].documents)
-    console.log("----------------------------------")
-
-    userResponse.data[0].documents.push(documentsResponse.data);
-    
-    console.log(userResponse.data[0].documents)
-    console.log("----------------------------------")
-    const updateduser = await axios.put(
-      usersEndpoint + "updateuser/" + userId,
-      { documents: userResponse.data[0].documents },
+      usersEndpoint + `updateUserDocs`,
+      { userId: userId,
+      documentId: documentsResponse.data._id} ,
       config
     );
 
-    console.log(updateduser.data)
-    console.log("----------------------------------")
 
     Logger.info(`User Updated!`);
 
