@@ -89,7 +89,7 @@ async function sendtoSigner(signers: string, docuuid: string):Promise<any>{
   
   Logger.info(`Sending document ${docuuid} to users ${signers}...`);
   let mailbody = {
-    "skip_email": "0",
+    "skip_email": 1,
     "workflow": "0",
     "tokenAPI": tokenapi
   }
@@ -295,7 +295,6 @@ export async function d4signflow(req: Express.Request, res: Express.Response) {
     "certificadoicpbr": "0",
     "assinatura_presencial": presencial,
     "embed_methodauth": "password",
-    "skip_email":"1"
     })
     signers_str = signers_str + ' / ' + value
   })
