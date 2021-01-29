@@ -10,6 +10,9 @@ import {
   } from "../util/template"
 
 import Express from "express"
+import "moment/locale/pt-br"
+
+moment.locale("pt-BR")
 
 export async function generateAceitePDF(req: Express.Request, res: Express.Response) {
     try {
