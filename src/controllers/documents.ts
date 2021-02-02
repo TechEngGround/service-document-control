@@ -26,7 +26,7 @@ export async function generateAceitePDF(req: Express.Request, res: Express.Respo
           .replace(/{{rg}}/g, req.body.rg)
           .replace(/{{endereco}}/g, req.body.address)
           .replace(/{{cep}}/g, req.body.zipcode)
-          .replace(/{{currentDate}}/g, moment().format("LL")),
+          .replace(/{{currentDate}}/g, moment().locale("pt-BR").format("LL")),
         `Aceite-${req.params.clientId}`,
       )
 
@@ -56,7 +56,7 @@ export async function generateAceitePDF(req: Express.Request, res: Express.Respo
           .replace(/{{rg}}/g, req.body.rg)
           .replace(/{{endereco}}/g, req.body.address)
           .replace(/{{cep}}/g, req.body.zipcode)
-          .replace(/{{currentDate}}/g, moment().format("LL")),
+          .replace(/{{currentDate}}/g, moment().locale("pt-BR").format("LL")),
         `Contrato-${req.params.clientId}`,
       )
       const minioClient = new MinioConnector();
@@ -84,7 +84,7 @@ export async function generateAceitePDF(req: Express.Request, res: Express.Respo
           .replace(/{{rg}}/g, req.body.rg)
           .replace(/{{endereco}}/g, req.body.address)
           .replace(/{{cep}}/g, req.body.zipcode)
-          .replace(/{{currentDate}}/g, moment().format("LL")),
+          .replace(/{{currentDate}}/g, moment().locale("pt-BR").format("LL")),
         `Procuracao-${req.params.clientId}`,
       )
       
