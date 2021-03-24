@@ -22,7 +22,6 @@ const doLogin = () => {
       }
     })
     .catch((err: any) => {
-      console.log(err)
       Logger.error('Error on Login!', err)
       setTimeout(doLogin, 20000)
     })
@@ -32,14 +31,14 @@ class App {
   server: Express.Application
 
   constructor() {
+    // eslint-disable-next-line new-cap
     this.server = Express()
-    this.server.use(bodyParser.json());
-    this.server.use(bodyParser.urlencoded({ extended: true }));
-    this.server.use(router);  
+    this.server.use(bodyParser.json())
+    this.server.use(bodyParser.urlencoded({ extended: true }))
+    this.server.use(router)
 
     doLogin()
   }
 }
 
 export default App
-

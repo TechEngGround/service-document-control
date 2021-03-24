@@ -5,6 +5,7 @@
     "prettier"
   ],
   "extends": [
+    "plugin:react/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "google",
@@ -14,17 +15,30 @@
     "browser": true,
     "es6": true
   },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [
-          ".js",
-          ".ts"
-        ]
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      },
+      "typescript": {},
+      "babel-plugin-root-import": {
+        "rootPathPrefix": "~",
+        "rootPathSuffix": "src"
       }
     }
   },
   "rules": {
+    "camelcase": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "require-jsdoc": "off",
     "indent": [
       "error",
       2
@@ -47,13 +61,6 @@
     "@typescript-eslint/no-explicit-any": "off",
     "consistent-return": "off",
     "func-names": "off",
-    "import/extensions": [
-      "off",
-      {
-        "js": "never",
-        "ts": "never"
-      }
-    ],
     "import/prefer-default-export": "off",
     "no-console": [
       "warn",
