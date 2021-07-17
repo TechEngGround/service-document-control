@@ -1,22 +1,22 @@
-import Logger from '../util/log'
-import axios from 'axios'
-import { getJwt } from '../util/jwt'
-import request from 'request'
+import Logger from "../util/log"
+import axios from "axios"
+import { getJwt } from "../util/jwt"
+import request from "request"
 
-const gateway_url = process.env.GATEWAY_URL || 'http://localhost:3000'
-const app_url = process.env.APP_URL || 'http://localhost'
+const gateway_url = process.env.GATEWAY_URL || "http://localhost:3000"
+const app_url = process.env.APP_URL || "http://localhost"
 
-const documentsEndpoint = gateway_url + '/docs/'
-const sharepointEndpoint = app_url + '/sharepoint/'
-const usersEndpoint = gateway_url + '/users/'
-const loginEndpoint = gateway_url + '/login'
+const documentsEndpoint = gateway_url + "/docs/"
+const sharepointEndpoint = app_url + "/sharepoint/"
+const usersEndpoint = gateway_url + "/users/"
+const loginEndpoint = gateway_url + "/login"
 
 export async function saveOnDB(
   userId: string,
   filename: string,
   documentType: string,
   needSign: boolean,
-) {
+): Promise<any> {
   try {
     const config = {
       headers: { Authorization: `Bearer ${getJwt()}` },
@@ -29,7 +29,7 @@ export async function saveOnDB(
       need_sign: needSign,
     }
     const documentsResponse = await axios.post(
-      documentsEndpoint + 'createdoc',
+      documentsEndpoint + "createdoc",
       { ...document },
       config,
     )
@@ -43,15 +43,19 @@ export async function saveOnDB(
 
     Logger.info(`User Updated!`)
 
-    return { message: 'Document Saved and User Updated!', error: undefined }
+    return { message: "Document Saved and User Updated!", error: undefined }
   } catch (error) {
     Logger.error(error)
-    return { message: 'Error', error }
+    return { message: "Error", error }
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export async function updateDocDB(d4sign_id: string, file: string, signers_info: Array<Object>) {
+export async function updateDocDB(
+  d4sign_id: string,
+  file: string,
+  signers_info: Array<any>,
+): Promise<any> {
   try {
     const data = {
       file: file,
@@ -62,21 +66,21 @@ export async function updateDocDB(d4sign_id: string, file: string, signers_info:
     Logger.info(`Updating Mongo Document ${file} on DB.`)
 
     await axios.post(documentsEndpoint + `findByNameAndUpdate`, data, {
-      headers: { Authorization: `Bearer ${getJwt()}`, 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${getJwt()}`, "Content-Type": "application/json" },
     })
     Logger.info(`Document ${file} updated.`)
   } catch (error) {
     Logger.error(error)
-    return { message: 'Error', error }
+    return { message: "Error", error }
   }
 }
 
-export async function uploadToSharepoint(doc_info: any) {
+export async function uploadToSharepoint(doc_info: any): Promise<any> {
   try {
     const options = {
-      method: 'POST',
-      url: sharepointEndpoint + 'uploadsignedfile',
-      headers: { 'Content-type': 'application/json' },
+      method: "POST",
+      url: sharepointEndpoint + "uploadsignedfile",
+      headers: { "Content-type": "application/json" },
       body: JSON.stringify(doc_info),
     }
 
@@ -90,11 +94,11 @@ export async function uploadToSharepoint(doc_info: any) {
     })
   } catch (error) {
     Logger.error(error)
-    return { message: 'Error', error }
+    return { message: "Error", error }
   }
 }
 
-export async function updateDocSignStatus(update_info: any, operation: number) {
+export async function updateDocSignStatus(update_info: any, operation: number): Promise<any> {
   try {
     let data
     let index
@@ -107,7 +111,7 @@ export async function updateDocSignStatus(update_info: any, operation: number) {
 
     const docFilter = { d4sign_id: update_info.uuid }
     const docResponse = await axios.post(
-      documentsEndpoint + 'getdocbyfilter',
+      documentsEndpoint + "getdocbyfilter",
       { filter: docFilter },
       config,
     )
@@ -133,33 +137,33 @@ export async function updateDocSignStatus(update_info: any, operation: number) {
       }
     } else if (operation == 1) {
       data = {
-        sign_status: 'finished',
+        sign_status: "finished",
         finished_ts: Date.now() / 1000,
       }
     } else if (operation == 3) {
       data = {
-        sign_status: 'cancelled',
+        sign_status: "cancelled",
       }
     } else if (operation == 2) {
       data = {
-        sign_status: 'email-not-sent',
+        sign_status: "email-not-sent",
       }
     }
 
     await axios.put(documentsEndpoint + `updatedoc/${docResponse.data[0]._id}`, data, {
-      headers: { Authorization: `Bearer ${getJwt()}`, 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${getJwt()}`, "Content-Type": "application/json" },
     })
     Logger.info(`Document d4sign id > ${update_info.uuid} sign status updated.`)
   } catch (error) {
     Logger.error(error)
-    return { message: 'Error', error }
+    return { message: "Error", error }
   }
 }
 
-export async function login(email: string, password: string) {
-  Logger.info('Making request to login...')
+export async function login(email: string, password: string): Promise<any> {
+  Logger.info("Making request to login...")
   const result = await axios.post(loginEndpoint, { email, password })
 
-  Logger.info('Request done!')
+  Logger.info("Request done!")
   return result.data.last_token
 }

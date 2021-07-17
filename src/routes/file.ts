@@ -1,15 +1,15 @@
-import Express from 'express'
-import multer from 'multer'
-import mime from 'mime'
+import Express from "express"
+import multer from "multer"
+import mime from "mime"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const md5 = require('crypto-js').MD5
+const md5 = require("crypto-js").MD5
 
-import { downloadFile, uploadFile } from '../controllers/file'
+import { downloadFile, uploadFile } from "../controllers/file"
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads/')
+    cb(null, "./uploads/")
   },
   filename: function (req, file, cb) {
     cb(null, `${md5(file.filename + Date.now().toString())}.${mime.getExtension(file.mimetype)}`)
@@ -21,7 +21,7 @@ const upload = multer({ storage })
 // eslint-disable-next-line new-cap
 const fileRouter = Express.Router()
 
-fileRouter.post('/upload/:userId/:documentType', upload.single('document'), uploadFile)
-fileRouter.get('/download', downloadFile)
+fileRouter.post("/upload/:userId/:documentType", upload.single("document"), uploadFile)
+fileRouter.get("/download", downloadFile)
 
 export default fileRouter

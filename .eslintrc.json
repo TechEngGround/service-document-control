@@ -5,7 +5,6 @@
     "prettier"
   ],
   "extends": [
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "google",
@@ -15,29 +14,20 @@
     "browser": true,
     "es6": true
   },
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 2020,
-    "sourceType": "module"
-  },
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
-      },
-      "typescript": {},
-      "babel-plugin-root-import": {
-        "rootPathPrefix": "~",
-        "rootPathSuffix": "src"
+        "extensions": [
+          ".js",
+          ".ts"
+        ]
       }
     }
   },
   "rules": {
-    "camelcase": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/camelcase": "off",
+    "camelcase":"off",
+    "new-cap": "off",
     "require-jsdoc": "off",
     "indent": [
       "error",
@@ -61,6 +51,13 @@
     "@typescript-eslint/no-explicit-any": "off",
     "consistent-return": "off",
     "func-names": "off",
+    "import/extensions": [
+      "off",
+      {
+        "js": "never",
+        "ts": "never"
+      }
+    ],
     "import/prefer-default-export": "off",
     "no-console": [
       "warn",
@@ -87,7 +84,7 @@
         "endOfLine": "lf",
         "printWidth": 100,
         "semi": false,
-        "singleQuote": true,
+        "singleQuote": false,
         "tabWidth": 2,
         "trailingComma": "all"
       }
